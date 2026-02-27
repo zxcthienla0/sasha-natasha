@@ -1,6 +1,6 @@
 export const Leading = () => {
     return (
-        <section className="max-w-7xl mx-auto px-4 lg:px-2 lg:pt-24 xl:mb-50 flex max-xl:flex-col lg:justify-between lg:items-center flex-row gap-3 xl:gap-12 max-xl:mb-10">
+        <section className="max-w-7xl mx-auto px-4 lg:px-2 lg:pt-24 xl:pb-50 flex max-xl:flex-col lg:justify-between lg:items-center flex-row gap-3 xl:gap-12 max-xl:pb-10">
             <div className="xl:w-[40%] flex flex-col max-xl:items-center xl:text-left max-xl:text-center text1 max-xl:mb-5">
                 <h3 className="text-lg sm:text-xl color2 mb-3 sm:mb-4 uppercase tracking-wider">
                     Контакты ведущего
