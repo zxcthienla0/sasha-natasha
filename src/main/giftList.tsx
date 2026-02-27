@@ -1,97 +1,44 @@
-import { useState } from 'react';
-
-const giftsData = [
-  {
-    id: 1,
-    title: 'Набор посуды',
-    image: 'public/gifts/gift.png',
-  },
-  {
-    id: 2,
-    title: 'Кофеварка',
-    image: 'public/gifts/gift.png',
-  },
-  {
-    id: 3,
-    title: 'Постельное белье',
-    image: 'public/gifts/gift.png',
-  },
-  {
-    id: 4,
-    title: 'Ваза для цветов',
-    image: 'public/gifts/gift.png',
-  },
-  {
-    id: 5,
-    title: 'Книга рецептов',
-    image: 'public/gifts/gift.png',
-  },
-  {
-    id: 6,
-    title: 'Плед',
-    image: 'public/gifts/gift.png',
-  },
-];
-
 export const GiftList = () => {
-  const [reservedGifts, setReservedGifts] = useState(new Set());
-
-  const handleReserve = (giftId: unknown) => {
-    if (reservedGifts.has(giftId)) {
-      setReservedGifts((prev) => {
-        const newSet = new Set(prev);
-        newSet.delete(giftId);
-        return newSet;
-      });
-    } else {
-      setReservedGifts((prev) => new Set(prev).add(giftId));
-      console.log(`Подарок ID ${giftId} зарезервирован`);
-    }
-  };
-
   return (
-    <section className="max-w-7xl mx-auto px-4 lg:px-2 py-12">
-      <h3 className="text-2xl md:text-3xl color1 mb-8 text-center uppercase tracking-wider">
-        Список подарков
-      </h3>
-      
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-        {giftsData.map((gift) => {
-          const isReserved = reservedGifts.has(gift.id);
-          return (
-            <div
-              key={gift.id}
-              className="relative group bg-white p-3 rounded-lg shadow-md border border-[#C3937C]/20 hover:shadow-xl transition-shadow"
-            >
-              <div className="absolute inset-0 border-2 border-[#C3937C]/30 rounded-lg pointer-events-none" />
-              
-              <div className="aspect-square overflow-hidden rounded-lg mb-3">
-                <img
-                  src={gift.image}
-                  alt={gift.title}
-                  className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                />
-              </div>
-              
-              <h4 className="text-center color2 font-medium text-sm md:text-base mb-2">
-                {gift.title}
-              </h4>
-              
-              <button
-                onClick={() => handleReserve(gift.id)}
-                disabled={isReserved}
-                className={`w-full py-2 px-3 rounded-full text-sm uppercase tracking-wider transition-colors ${
-                  isReserved
-                    ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                    : 'bg-[#C3937C] text-white hover:bg-[#b07e68]'
-                }`}
-              >
-                {isReserved ? 'Зарезервировано' : 'Зарезервировать'}
-              </button>
-            </div>
-          );
-        })}
-      </div>
+    <section className="max-w-7xl mx-auto px-4 lg:px-2 lg:pt-24 xl:mb-50 flex max-xl:flex-col lg:justify-between lg:items-center flex-row-reverse gap-3 xl:gap-12 max-xl:mb-10">
+        <div className="lg:text-right xl:w-[40%] flex flex-col max-xl:items-center xl:text-right max-xl:text-center text1 max-xl:mb-5">
+          <h3 className="text-lg sm:text-xl color2 mb-3 sm:mb-4 uppercase tracking-wider">
+            Пожелания
+          </h3>
+          <h2 className="text-3xl color1 mb-4 uppercase">
+            Спасибо что вы с нами
+          </h2>
+          <p className="color2 text-2xl">
+            Мы не хотим, чтобы вы переживали из-за подарка, 
+            ваше присутствие на нашем празднике и ваши улыбки 
+            это уже лучшие подарки для нас!!! <br/>
+            но если вы вдруг 
+            хотите дополнительно нас поздравить, то  мы будем 
+            благодарны за финансовую поддержу нашей мечты: строительство 
+            нашего общего дома <br/>и свадебное путешествие, 
+            <br/>что сделает нас еще счастливее {")))"}
+          </p>
+        </div>
+
+        <div className="relative xl:w-[59%]  max-xl:border-4 border-[#C3937C]">
+          <img
+            src="Happy.jpg"
+            alt="Alexander and Natalia"
+            className="w-full xl:rounded-br-[170px] object-cover object-center h-[500px]"
+          />
+          
+          <img
+            src="ramka.png"
+            alt=""
+            className="absolute top-[-27px] left-[-32px] xl:top-[-60px] xl:left-[-73px] w-30 xl:w-auto z-10 overflow-hidden"
+          />
+          
+          <img
+            src="gold.png"
+            alt=""
+            className="absolute max-xl:hidden xl:top-[-250px] xl:left-[-250px] 2xl:top-[-350px] 2xl:left-[-350px] scale-50 xl:scale-75 z-10"
+          />
+        </div>
     </section>
   );
 };

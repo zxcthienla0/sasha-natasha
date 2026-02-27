@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 const alcoholOptions = [
+  'Белое вино',
   'Красное вино',
   'Самогон',
   'Шампанское',
@@ -20,6 +21,7 @@ export const GuestForm = () => {
     alcohol: alcoholOptions[0],
   });
   const [additionalGuests, setAdditionalGuests] = useState<Guest[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const addGuest = () => {
     setAdditionalGuests([
@@ -40,16 +42,59 @@ export const GuestForm = () => {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Основной гость:', mainGuest);
-    console.log('Дополнительные гости:', additionalGuests);
-    alert('Спасибо! Ваш ответ учтён.');
+    setIsSubmitting(true);
+
+    let message = `<b>Новый ответ на приглашение</b>\n\n`;
+    message += `<b>Основной гость:</b> ${mainGuest.name}\n`;
+    message += `<b>Выбор напитка:</b> ${mainGuest.alcohol}\n`;
+
+    if (additionalGuests.length > 0) {
+      message += `\n<b>Дополнительные гости:</b>\n`;
+      additionalGuests.forEach((guest, index) => {
+        message += `${index + 1}. ${guest.name} — ${guest.alcohol}\n`;
+      });
+    }
+
+    const token = '8687306979:AAHeDz8XLDVRlZ5dy6bYCJEsR0PyoG0AmyE';
+    const chatId = '-5223473937';
+    const url = `https://api.telegram.org/bot${token}/sendMessage`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message,
+          parse_mode: 'HTML',
+        }),
+      });
+
+      const data = await response.json();
+      if (data.ok) {
+        alert('Спасибо! Ваш ответ отправлен.');
+        // Очистка формы (по желанию)
+        setMainGuest({ name: '', alcohol: alcoholOptions[0] });
+        setAdditionalGuests([]);
+      } else {
+        alert('Ошибка при отправке. Попробуйте ещё раз.');
+        console.error('Telegram API error:', data);
+      }
+    } catch (error) {
+      console.error('Ошибка соединения:', error);
+      alert('Ошибка соединения. Проверьте интернет.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 lg:px-2 py-12">
-      <div className="bg-[#FBF8F1] backdrop-blur-sm p-6 md:p-10 rounded-2xl shadow-xl border border-[#C3937C] border-2 ">
+    <section className="max-w-7xl mx-auto px-4 lg:px-2 py-12 max-xl:mb-10">
+      <div className="bg-[#FBF8F1] backdrop-blur-sm p-6 md:p-10 rounded-2xl shadow-xl border border-[#C3937C] border-2">
         <h3 className="text-2xl md:text-3xl color1 mb-6 text-center uppercase tracking-wider">
           Пожалуйста дайте нам знать кого ждать, и какие у вас предпочтения напитков
         </h3>
@@ -157,9 +202,12 @@ export const GuestForm = () => {
           <div className="text-center pt-6">
             <button
               type="submit"
-              className="px-10 py-4 bg-[#C3937C] text-white text-lg uppercase tracking-wider rounded-full hover:bg-[#b07e68] transition-colors shadow-lg"
+              disabled={isSubmitting}
+              className={`px-10 py-4 bg-[#C3937C] text-white text-lg uppercase tracking-wider rounded-full hover:bg-[#b07e68] transition-colors shadow-lg ${
+                isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             >
-              Отправить ответ
+              {isSubmitting ? 'Отправка...' : 'Отправить ответ'}
             </button>
           </div>
         </form>
