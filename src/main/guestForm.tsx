@@ -43,54 +43,37 @@ export const GuestForm = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    let message = `<b>Новый ответ на приглашение</b>\n\n`;
-    message += `<b>Основной гость:</b> ${mainGuest.name}\n`;
-    message += `<b>Выбор напитка:</b> ${mainGuest.alcohol}\n`;
-
-    if (additionalGuests.length > 0) {
-      message += `\n<b>Дополнительные гости:</b>\n`;
-      additionalGuests.forEach((guest, index) => {
-        message += `${index + 1}. ${guest.name} — ${guest.alcohol}\n`;
-      });
-    }
-
-    const token = '8687306979:AAHeDz8XLDVRlZ5dy6bYCJEsR0PyoG0AmyE';
-    const chatId = '-5223473937';
-    const url = `https://api.telegram.org/bot${token}/sendMessage`;
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: message,
-          parse_mode: 'HTML',
-        }),
-      });
-
-      const data = await response.json();
-      if (data.ok) {
-        alert('Спасибо! Ваш ответ отправлен.');
-        // Очистка формы (по желанию)
-        setMainGuest({ name: '', alcohol: alcoholOptions[0] });
-        setAdditionalGuests([]);
-      } else {
-        alert('Ошибка при отправке. Попробуйте ещё раз.');
-        console.error('Telegram API error:', data);
-      }
-    } catch (error) {
-      console.error('Ошибка соединения:', error);
-      alert('Ошибка соединения. Проверьте интернет.');
-    } finally {
-      setIsSubmitting(false);
-    }
+  const payload = {
+    mainGuest: {
+      name: mainGuest.name,
+      alcohol: mainGuest.alcohol
+    },
+    additionalGuests: additionalGuests.map(({ name, alcohol }) => ({ name, alcohol }))
   };
+
+  try {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbyKtaNg35XMyZtr6yZ-AlJbw76oi8ehuobznQG9sJ-Kbb8SfJ_Elv44I8srBENdzSX4zQ/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload)
+    });
+
+    alert('Спасибо! Ваш ответ отправлен.');
+    setMainGuest({ name: '', alcohol: alcoholOptions[0] });
+    setAdditionalGuests([]);
+  } catch (error) {
+    console.error('Ошибка:', error);
+    alert('Ошибка при отправке. Попробуйте ещё раз.');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <section className="max-w-7xl mx-auto px-4 lg:px-2 py-12 max-xl:mb-10">
