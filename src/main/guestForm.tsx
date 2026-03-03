@@ -1,10 +1,15 @@
 import { useState } from 'react';
 
 const alcoholOptions = [
-  'Белое вино',
-  'Красное вино',
+  'Вино белое сухое',
+  'Вино белое п/сладкое',
+  'Вино красное сухое ',
+  'Вино красное п/сладкое',
+  'Шампанское п/сладкое',
+  'Шампанское сухое',
+  'Пиво бутылочное',
+  'Водка',
   'Самогон',
-  'Шампанское',
   'Виски',
   'Безалкогольное',
 ];
@@ -43,37 +48,37 @@ export const GuestForm = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  const payload = {
-    mainGuest: {
-      name: mainGuest.name,
-      alcohol: mainGuest.alcohol
-    },
-    additionalGuests: additionalGuests.map(({ name, alcohol }) => ({ name, alcohol }))
-  };
-
-  try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbyKtaNg35XMyZtr6yZ-AlJbw76oi8ehuobznQG9sJ-Kbb8SfJ_Elv44I8srBENdzSX4zQ/exec', {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/json',
+    const payload = {
+      mainGuest: {
+        name: mainGuest.name,
+        alcohol: mainGuest.alcohol
       },
-      body: JSON.stringify(payload)
-    });
+      additionalGuests: additionalGuests.map(({ name, alcohol }) => ({ name, alcohol }))
+    };
 
-    alert('Спасибо! Ваш ответ отправлен.');
-    setMainGuest({ name: '', alcohol: alcoholOptions[0] });
-    setAdditionalGuests([]);
-  } catch (error) {
-    console.error('Ошибка:', error);
-    alert('Ошибка при отправке. Попробуйте ещё раз.');
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+    try {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbyKtaNg35XMyZtr6yZ-AlJbw76oi8ehuobznQG9sJ-Kbb8SfJ_Elv44I8srBENdzSX4zQ/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      });
+
+      alert('Спасибо! Ваш ответ отправлен.');
+      setMainGuest({ name: '', alcohol: alcoholOptions[0] });
+      setAdditionalGuests([]);
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('Ошибка при отправке. Попробуйте ещё раз.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <section className="max-w-7xl mx-auto px-4 lg:px-2 py-12 max-xl:mb-10">
@@ -186,9 +191,8 @@ export const GuestForm = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`px-10 py-4 bg-[#C3937C] text-white text-lg uppercase tracking-wider rounded-full hover:bg-[#b07e68] transition-colors shadow-lg ${
-                isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+              className={`px-10 py-4 bg-[#C3937C] text-white text-lg uppercase tracking-wider rounded-full hover:bg-[#b07e68] transition-colors shadow-lg ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
             >
               {isSubmitting ? 'Отправка...' : 'Отправить ответ'}
             </button>
